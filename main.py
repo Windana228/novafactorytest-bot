@@ -1,6 +1,7 @@
-
 import asyncio
 import logging
+import os
+import json
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
@@ -15,10 +16,10 @@ logger = logging.getLogger(__name__)
 # Google Sheets setup
 SHEET_KEY = "1tqz3hfCDhLlMRQNOCAkfQQAgL1223zi4IjHZexkKDsg"
 SHEET_NAME = "Responses"
-CREDENTIALS_PATH = "credentials.json"
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_PATH, scope)
+credentials_dict = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
 client = gspread.authorize(credentials)
 sheet = client.open_by_key(SHEET_KEY).worksheet(SHEET_NAME)
 
